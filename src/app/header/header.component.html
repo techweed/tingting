@@ -1,0 +1,35 @@
+<nav class="navbar navbar-default" style="margin-bottom: unset;">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" (click)="collapsed = !collapsed">
+                <span class="icon-bar" *ngFor="let iconBar of [1, 2, 3]"></span>
+            </button>
+            <a routerLink="/" class="navbar-brand" style="font-weight: bold;">TING TING</a>
+        </div>
+        <div class="navbar-collapse" [class.collapse]="collapsed" (window:resize)="collapsed = true">
+            <!-- <ul class="nav navbar-nav">
+                <li><a >Recipes</a></li>
+                <li><a ></a>Recipes</a></li>
+            </ul> -->
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a *ngIf="token">{{token.charAt(0).toUpperCase() + token.slice(1)}}</a>
+                </li>
+                <li>
+                    <a *ngIf="!token" [routerLink]="[ '/login']" role="button">Login</a>
+                </li>
+                <li>
+                    <a *ngIf="token" (click)="logout()" [routerLink]="[ '/home']" role="button">Logout</a>
+
+                </li>
+                <!-- <li class="dropdown">
+                    <a  class="dropdown-toggle" role="button">Manage<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Recipes</a></li>
+                        <li><a href="#">Recipes</a></li>
+                    </ul>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+</nav>

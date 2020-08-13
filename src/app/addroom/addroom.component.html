@@ -1,0 +1,16 @@
+<div class="container">
+  <h4 >  <button class="btn" style="font-size: 30px;background-color: transparent;padding: 6px 1px;" (click)=toggleModal()>⬅️</button>
+    Create Room</h4>
+
+  <div style="width:80%;">
+    <form class="input-group" [formGroup]="roomForm" (ngSubmit)="onFormSubmit(roomForm.value)">
+        <input class="form-control width100" placeholder="Room name" formControlName="roomname">
+        <span class="input-group-btn">
+
+        <button type="submit" [disabled]="!roomForm.valid" class="btn btn-primary" style="float: right;">Add</button>
+        </span>
+    </form>
+  </div>
+  </div>
+
+<div id="snackbar">Room Name Already Taken</div>
