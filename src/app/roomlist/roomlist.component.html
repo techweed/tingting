@@ -1,27 +1,40 @@
 <div *ngIf="!room&&!add" style="padding: 5px;">
-<button class="btn btn-danger" style="position: absolute;bottom: 15px;right: 15px;border-radius: 25px;width:50px;height:50px" (click)="addRoom()">+</button>
+  <button class="btn"
+    style="position: fixed;bottom: 15vw;right: 40vw;border-radius: 25px;width:50px;height:50px;background-color: white ;box-shadow: 5px 10px 30px #888888;"
+    (click)="addRoom()">➕</button>
 
   <div *ngIf="addMem" id="myModal" class="modal">
 
     <!-- Modal content -->
     <div class="modal-content">
       <span class="close" (click)="closeModa()">&times;</span>
-      <label for="selector" style="padding-right:1em;">Remove: </label>
-          <select style="max-width: 20px;" name="selector"
-            (ngModelChange)="rooms[i].admin!==nickname?null:selectChangeHandler($event,rooms[i].roomname,rooms[i].admin)" ngModel>
-            <option *ngFor="let j of rooms[i].members  | keyvalue">{{j.value}}</option>
-          </select>
 
-          <div  *ngIf="rooms[i].admin==nickname">
-            <form class="input-group" (ngSubmit)="addMember(rooms[i].roomname,f);f.resetForm()" #f="ngForm">
-              <input class="form-control"  ngModel name="newMember" required>
-              <span class="input-group-btn">
-                <button type="submit" class="btn btn-danger" [disabled]="!f.valid">add</button>
-              </span>
-            </form>
-            </div>
+      <br><br>
+
+      <div *ngIf="rooms[i].admin==nickname">
+        <form class="input-group" (ngSubmit)="addMember(rooms[i].roomname,f);f.resetForm()" #f="ngForm">
+          <input class="form-control" ngModel name="newMember" placeholder="Add New Member" required>
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-danger" [disabled]="!f.valid">add</button>
+          </span>
+        </form>
+      </div>
+      <div>
+        <br><br>
+        <label for="selector" style="padding-right:.3em;">Kick Out:</label>
+        <select style="max-width: 20px;" name="selector"
+          (ngModelChange)="rooms[i].admin!==nickname?null:selectChangeHandler($event,rooms[i].roomname,rooms[i].admin)"
+          ngModel>
+          <option *ngFor="let j of rooms[i].members  | keyvalue">{{j.value}}</option>
+        </select>
+        <button class="btn btn-danger" style="margin-left: 10px;float: right;"
+          (click)="deactivate([rooms[i].roomname,rooms[i].admin==nickname])">{{rooms[i].admin==nickname?"Delete Room":"Exit Room"}}
+        </button>
+
+      </div>
+
     </div>
-  
+
   </div>
 
 
@@ -29,7 +42,7 @@
   <table class="table table-striped" *ngIf="this.device==='pc';else mobile">
     <thead>
       <tr>
-        <th scope="col">#</th>
+        <th scope="col"></th>
         <th scope="col">Chat Rooms</th>
         <th scope="col">Admin</th>
         <th scope="col"></th>
@@ -39,8 +52,10 @@
     </thead>
     <tbody>
       <tr *ngFor="let x of rooms; index as i" (click)="enterChatRoom(x.roomname)">
-        <th scope="row">{{ i + 1 }}</th>
-        <td style="display: flex;">{{x.roomname}}<div  style="margin-left:5px;border-radius: 10px;width:auto;min-width:20px;height:20px;background-color: orange;text-align: center;">&nbsp;&nbsp;</div>
+        <th scope="row"></th>
+        <td style="display: flex;">{{x.roomname.length>20?x.roomname.substring(0, 20) + '...':x.roomname}}<div
+            style="margin-left:5px;border-radius: 10px;width:auto;min-width:20px;height:20px;background-color: orange;text-align: center;">
+            &nbsp;&nbsp;</div>
         </td>
         <td>{{x.admin}}</td>
         <td><button class="btn btn-danger" (click)="deactivate([x.roomname,x.admin==nickname])"
@@ -76,16 +91,17 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col"></th>
           <th scope="col">Chat Rooms</th>
           <th>More</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let x of rooms; index as i" (click)="enterChatRoom(x.roomname)">
-          <th scope="row">{{ i + 1 }}</th>
-          <td>{{x.roomname}}</td>
-          <td><button class="btn btn-secondary" style="color:grey" (click)="more(i)">⚙️</button></td>
+          <th scope="row"></th>
+          <td style="min-width: 60vw;">{{x.roomname.length>30?x.roomname.substring(0, 30) + '...':x.roomname}}</td>
+          <td><button class="btn" style="background-color:transparent;font-size: 20px;padding: 0px 5px;"
+              (click)="more(i)">⚙️</button></td>
         </tr>
       </tbody>
     </table>

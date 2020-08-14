@@ -64,8 +64,8 @@ table {
 /* Modal Content/Box */
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
+  margin: 45% auto; /* 15% from the top and centered */
+  padding: 5px 30px 40px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
 }
@@ -76,6 +76,7 @@ table {
   float: right;
   font-size: 28px;
   font-weight: bold;
+  top:0px;
 }
 
 .close:hover,

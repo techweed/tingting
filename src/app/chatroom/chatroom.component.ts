@@ -40,7 +40,7 @@ export class ChatroomComponent implements OnInit {
   users = [];
   chats = [];
   device = 'pc';
-  
+
   matcher = new MyErrorStateMatcher();
   @Input() roomname: string;
   @Input() isAdmin: boolean;
@@ -81,7 +81,7 @@ export class ChatroomComponent implements OnInit {
     const chat = form;
     chat.roomname = this.roomname;
     chat.nickname = this.nickname;
-    chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss');
+    chat.date = this.datepipe.transform(new Date(), 'MM/dd/yyyy HH:mm:ss');
     chat.type = 'message';
     chat.status = 'send'
     const newMessage = firebase.database().ref('chats/').push();

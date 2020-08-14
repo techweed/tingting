@@ -60,6 +60,18 @@ export class RoomlistComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // for(let i in this.rooms){
+    //   this.rooms[i]
+    //   firebase.database().ref('chats/').orderByChild('roomname').equalTo(this.roomname).once('value', resp => {
+    //     let chats = [];
+    //     chats = snapshotToArray(resp);
+    //     for(let i in chats){
+    //       let obj = chats[i].roomname === this.rooms[i];
+    //       console.log(chats[i])
+  
+    //     }
+    //   })
+    // }
   }
 
   selectChangeHandler(event: any, roomname: any, admin: any) {
