@@ -7,7 +7,7 @@
 
     <!-- Modal content -->
     <div class="modal-content">
-      <span class="close" (click)="closeModa()">&times;</span>
+      <span class="close" (click)="closeM()">&times;</span>
 
       <br><br>
 
@@ -25,7 +25,7 @@
         <select style="max-width: 20px;" name="selector"
           (ngModelChange)="rooms[i].admin!==nickname?null:selectChangeHandler($event,rooms[i].roomname,rooms[i].admin)"
           ngModel>
-          <option *ngFor="let j of rooms[i].members  | keyvalue">{{j.value}}</option>
+          <option *ngFor="let j of rooms[i].members  | keyvalue">{{j.key}}</option>
         </select>
         <button class="btn btn-danger" style="margin-left: 10px;float: right;"
           (click)="deactivate([rooms[i].roomname,rooms[i].admin==nickname])">{{rooms[i].admin==nickname?"Delete Room":"Exit Room"}}
@@ -55,7 +55,7 @@
         <th scope="row"></th>
         <td style="display: flex;">{{x.roomname.length>20?x.roomname.substring(0, 20) + '...':x.roomname}}<div
             style="margin-left:5px;border-radius: 10px;width:auto;min-width:20px;height:20px;background-color: orange;text-align: center;">
-            &nbsp;&nbsp;</div>
+            &nbsp;{{x.unread}}&nbsp;</div>
         </td>
         <td>{{x.admin}}</td>
         <td><button class="btn btn-danger" (click)="deactivate([x.roomname,x.admin==nickname])"
@@ -65,7 +65,7 @@
           <label for="selector" style="padding-right:1em;">Remove: </label>
           <select style="max-width: 20px;" name="selector" (click)="abc()"
             (ngModelChange)="x.admin!==nickname?null:selectChangeHandler($event,x.roomname,x.admin)" ngModel>
-            <option *ngFor="let i of x.members | keyvalue">{{i.value}}</option>
+            <option *ngFor="let i of x.members | keyvalue">{{i.key}}</option>
           </select>
         </td>
         <td></td>
@@ -99,7 +99,11 @@
       <tbody>
         <tr *ngFor="let x of rooms; index as i" (click)="enterChatRoom(x.roomname)">
           <th scope="row"></th>
-          <td style="min-width: 60vw;">{{x.roomname.length>30?x.roomname.substring(0, 30) + '...':x.roomname}}</td>
+          <td style="min-width: 60vw;display: flex;">
+            {{x.roomname.length>30?x.roomname.substring(0, 30) + '...':x.roomname}}<div
+              style="margin-left:5px;border-radius: 10px;width:auto;min-width:20px;height:20px;background-color: orange;text-align: center;">
+              &nbsp;{{x.unread}}&nbsp;</div>
+          </td>
           <td><button class="btn" style="background-color:transparent;font-size: 20px;padding: 0px 5px;"
               (click)="more(i)">⚙️</button></td>
         </tr>
@@ -110,7 +114,6 @@
 
 </div>
 
-<app-chatroom *ngIf="room" [roomname]='roomname' [isAdmin]='isAdmin' (closeModal)="closeModal($event)"
-  (deactivate)="deactivate($event)"></app-chatroom>
+<app-chatroom *ngIf="room" [roomname]='roomname' (closeModal)="closeModal($event)"></app-chatroom>
 <app-addroom *ngIf="add" (closeModal)="closeAddModal($event)"></app-addroom>
-<div id="snackbar"> Already a Member!</div>
+<div id="snackbar"> User Does not Exit/Already a Member!</div>

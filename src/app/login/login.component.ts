@@ -30,13 +30,13 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['/home']);
     }
     this.loginForm = this.formBuilder.group({
-      'nickname' : [null, Validators.required]
+      'nickname': [null, Validators.required]
     });
   }
 
   onFormSubmit(form: any) {
     const login = form;
-    login .nickname = login.nickname.toLowerCase();
+    login.nickname = login.nickname.toLowerCase();
     this.ref.orderByChild('nickname').equalTo(login.nickname).once('value', snapshot => {
       if (snapshot.exists()) {
         localStorage.setItem('nickname', login.nickname);

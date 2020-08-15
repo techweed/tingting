@@ -40,12 +40,13 @@ export class ChatroomComponent implements OnInit {
   users = [];
   chats = [];
   device = 'pc';
+  chatLength = 0;
 
   matcher = new MyErrorStateMatcher();
   @Input() roomname: string;
-  @Input() isAdmin: boolean;
+  // @Input() isAdmin: boolean;
   @Output() closeModal = new EventEmitter<boolean>();
-  @Output() deactivate = new EventEmitter<[string,boolean]>();
+  // @Output() deactivate = new EventEmitter<[string, boolean]>();
 
   constructor(private router: Router,
     private route: ActivatedRoute,
@@ -59,9 +60,10 @@ export class ChatroomComponent implements OnInit {
   }
   ngOnInit(): void {
     this.nickname = localStorage.getItem('nickname');
-    firebase.database().ref('chats/').orderByChild('roomname').equalTo(this.roomname).on('value', resp => {
+    firebase.database().ref('chats/' + this.roomname).on('value', resp => {
       this.chats = [];
       this.chats = snapshotToArray(resp);
+      this.chatLength = this.chats.length;
       setTimeout(() => this.scrolltop = this.chatcontent.nativeElement.scrollHeight, 500);
     });
     // firebase.database().ref('roomusers/').orderByChild('roomname').equalTo(this.roomname).once('value', (resp2: any) => {
@@ -79,13 +81,15 @@ export class ChatroomComponent implements OnInit {
 
   onFormSubmit(form: any) {
     const chat = form;
-    chat.roomname = this.roomname;
+    // chat.roomname = this.roomname;
     chat.nickname = this.nickname;
     chat.date = this.datepipe.transform(new Date(), 'MM/dd/yyyy HH:mm:ss');
     chat.type = 'message';
     chat.status = 'send'
-    const newMessage = firebase.database().ref('chats/').push();
-    newMessage.set(chat);
+    const newMessage = firebase.database().ref('chats/' + this.roomname);
+    newMessage.child(this.chatLength + '').set(chat);
+
+
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
     });
@@ -93,11 +97,11 @@ export class ChatroomComponent implements OnInit {
 
   toggleModal() {
     this.closeModal.emit(false);
-  } 
-   deactivat(x) {
-    this.deactivate.emit([x,this.isAdmin]);
-    this.toggleModal();
   }
+  // deactivat(x) {
+  //   this.deactivate.emit([x, this.isAdmin]);
+  //   this.toggleModal();
+  // }
 
   exitChat() {
     //   const chat = { roomname: '', nickname: '', message: '', date: '', type: '' };

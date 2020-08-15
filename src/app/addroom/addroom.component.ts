@@ -42,19 +42,16 @@ export class AddroomComponent implements OnInit {
 
   onFormSubmit(form: any) {
     form.admin = localStorage.getItem('nickname');
-    form.members = [form.admin];
     const room = form;
     this.ref.orderByChild('roomname').equalTo(room.roomname).once('value', (snapshot: any) => {
       if (snapshot.exists()) {
         var x = document.getElementById("snackbar");
-        // Add the "show" class to DIV
         x.className = "show";
-        // After 3 seconds, remove the show class from DIV
         setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
       } else {
         const newRoom = firebase.database().ref('rooms/').push();
         newRoom.set(room);
-        // this.router.navigate(['/roomlist']);
+        newRoom.child('members').child(form.admin).set(0);
         this.toggleModal();
       }
     });

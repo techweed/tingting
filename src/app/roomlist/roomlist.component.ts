@@ -33,7 +33,8 @@ export class RoomlistComponent implements OnInit {
   device = 'pc';
   isAdmin = false;
   addMem = false;
-  i;
+  i; //index of the room passed for more options in mobile
+
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -47,44 +48,54 @@ export class RoomlistComponent implements OnInit {
     this.nickname = localStorage.getItem('nickname');
     firebase.database().ref('rooms/').on('value', resp => {
       this.rooms = [];
+      let ind = -1;
       resp.forEach(i => {
-        if (i.val().members.includes(this.nickname)) {
-          let arr: { key: string }
+        if (Object.keys(i.val().members).includes(this.nickname)) {
+          let arr: any;
           arr = i.val();
           arr.key = i.key;
+          arr.unread = 0;
           this.rooms.push(arr);
+          ind++;
+        }
+        if (this.rooms[ind]) {
+          let ind2 = ind;
+          firebase.database().ref('chats/' + i.val().roomname).limitToLast(100).once('value', resp2 => {
+            let chats = [];
+            chats = snapshotToArray(resp2);
+            let y = 0;
+            for (let i in chats) {
+              if (chats[i].status === 'send' && chats[i].nickname != this.nickname) {
+                y++;
+                this.rooms[ind2].unread = y;
+              }
+            }
+          })
         }
       });
       this.isLoadingResults = false;
     });
+
+
   }
 
   ngOnInit(): void {
-    // for(let i in this.rooms){
-    //   this.rooms[i]
-    //   firebase.database().ref('chats/').orderByChild('roomname').equalTo(this.roomname).once('value', resp => {
-    //     let chats = [];
-    //     chats = snapshotToArray(resp);
-    //     for(let i in chats){
-    //       let obj = chats[i].roomname === this.rooms[i];
-    //       console.log(chats[i])
-  
-    //     }
-    //   })
-    // }
+
   }
 
   selectChangeHandler(event: any, roomname: any, admin: any) {
-    console.log(event, roomname)
+    // console.log(event, roomname)
     if (event !== admin) {
       firebase.database().ref('rooms/').orderByChild('roomname').equalTo(roomname).once('value', (resp: any) => {
         let roomuser = [];
         roomuser = snapshotToArray(resp);
         if (roomuser !== undefined) {
           const userRef = firebase.database().ref('rooms/' + roomuser[0].key + '/members');
-          userRef.orderByValue().equalTo(event).once('value', (snapshot) => {
-            userRef.child(Object.keys(snapshot.val())[0]).remove();
-          });
+          // userRef.order().equalTo(event).once('value', (snapshot) => {
+          //   console.log(snapshotToArray(snapshot))
+
+          userRef.child(event).remove();
+          // });
         }
       })
     }
@@ -99,6 +110,9 @@ export class RoomlistComponent implements OnInit {
   }
 
   enterChatRoom(roomname: string) {
+    const rr = this.rooms.find(x => x.roomname === roomname);
+    rr.unread = 0;
+
     this.roomname = roomname;
     let admin = this.getAdmin(roomname);
     if (admin == this.nickname) {
@@ -115,14 +129,20 @@ export class RoomlistComponent implements OnInit {
     // const newMessage = firebase.database().ref('chats/').push();
     // newMessage.set(chat);
 
-    firebase.database().ref('chats/').orderByChild('roomname').equalTo(this.roomname).limitToLast(100).once('value', (resp: any) => {
+    // firebase.database().ref('chats/' + this.roomname).on('value', resp => {
+    //   this.chats = [];
+    //   this.chats = snapshotToArray(resp);
+
+
+
+    firebase.database().ref('chats/' + this.roomname).limitToLast(100).once('value', (resp: any) => {
       let roomuser = [];
       let nick = this.nickname;
+      let rn = this.roomname;
       roomuser = snapshotToArray(resp);
       roomuser.forEach(function (child) {
-        // console.log(nick)
+        const userRef = firebase.database().ref('chats/' + rn + '/' + child.key);
         if (child.nickname !== nick) {
-          const userRef = firebase.database().ref('chats/' + child.key);
           userRef.update({ status: 'read' });
         }
 
@@ -169,23 +189,28 @@ export class RoomlistComponent implements OnInit {
 
   addMember(roomname: string, member: any) {
     event.stopPropagation();
-    firebase.database().ref('rooms/').orderByChild('roomname').equalTo(roomname).once('value', (resp: any) => {
-      let roomuser = [];
-      roomuser = snapshotToArray(resp);
-      const userRef = firebase.database().ref('rooms/' + roomuser[0].key + '/members');
-      userRef.orderByValue().equalTo(member.value.newMember).once('value', (snapshot: any) => {
-        if (snapshot.exists()) {
-          var x = document.getElementById("snackbar");
-          // Add the "show" class to DIV
-          x.className = "show";
-          // After 3 seconds, remove the show class from DIV
-          setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
-        } else {
-          const len = roomuser[0].members.length;
-          userRef.child(len).set(member.value.newMember);
-        }
-      });
-
+    let mem = member.value.newMember.toLowerCase();
+    firebase.database().ref('users/').orderByChild('nickname').equalTo(mem).once('value', (snapshot: any) => {
+      if (!snapshot.exists()) {
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+      } else {
+        firebase.database().ref('rooms/').orderByChild('roomname').equalTo(roomname).once('value', (resp: any) => {
+          let roomuser = [];
+          roomuser = snapshotToArray(resp);
+          const userRef = firebase.database().ref('rooms/' + roomuser[0].key + '/members');
+          userRef.orderByKey().equalTo(mem).once('value', (snapshot: any) => {
+            if (snapshot.exists()) {
+              var x = document.getElementById("snackbar");
+              x.className = "show";
+              setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            } else {
+              userRef.child(mem).set(0);
+            }
+          })
+        });
+      }
     })
   }
 
@@ -197,13 +222,14 @@ export class RoomlistComponent implements OnInit {
     this.i = x;
   }
 
-  closeModa() {
+  closeM() {
     this.addMem = false;
 
   }
 
   deactivate(rommandisAdmin) {
     event.stopPropagation();
+    this.closeM();
     if (rommandisAdmin[1]) {
       firebase.database().ref('rooms/').orderByChild('roomname').equalTo(rommandisAdmin[0]).once('value', (resp: any) => {
         let roomuser = [];
@@ -219,13 +245,10 @@ export class RoomlistComponent implements OnInit {
         roomuser = snapshotToArray(resp);
         if (roomuser !== undefined) {
           const userRef = firebase.database().ref('rooms/' + roomuser[0].key + '/members');
-          userRef.orderByValue().equalTo(this.nickname).once('value', (snapshot) => {
-            userRef.child(Object.keys(snapshot.val())[0]).remove();
-          });
+          userRef.child(this.nickname).remove();
         }
       })
     }
-
   }
 
 }
