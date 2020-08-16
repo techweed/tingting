@@ -3,15 +3,12 @@
     style="position: fixed;bottom: 15vw;right: 40vw;border-radius: 25px;width:50px;height:50px;background-color: white ;box-shadow: 5px 10px 30px #888888;"
     (click)="addRoom()">➕</button>
 
-  <div *ngIf="addMem" id="myModal" class="modal">
-
+  <div *ngIf="addMem" id="myModal" class="modal" (click)="closeM()">
     <!-- Modal content -->
-    <div class="modal-content">
-      <span class="close" (click)="closeM()">&times;</span>
-
+    <div class="modal-content" (click)="abc()">
+      <!-- <span class="close" (click)="closeM()">&times;</span> -->
       <br><br>
-
-      <div *ngIf="rooms[i].admin==nickname">
+      <div *ngIf="rooms[i].admin==nickname;else adminOnly">
         <form class="input-group" (ngSubmit)="addMember(rooms[i].roomname,f);f.resetForm()" #f="ngForm">
           <input class="form-control" ngModel name="newMember" placeholder="Add New Member" required>
           <span class="input-group-btn">
@@ -19,9 +16,14 @@
           </span>
         </form>
       </div>
+
+      <ng-template #adminOnly>
+        <h5>Contact Admin to Add/Remove Members</h5>
+      </ng-template>
+      
       <div>
         <br><br>
-        <label for="selector" style="padding-right:.3em;">Kick Out:</label>
+        <label for="selector" style="padding-right:.3em;">{{rooms[i].admin===nickname?'Kick Out:':'Members'}}</label>
         <select style="max-width: 20px;" name="selector"
           (ngModelChange)="rooms[i].admin!==nickname?null:selectChangeHandler($event,rooms[i].roomname,rooms[i].admin)"
           ngModel>
