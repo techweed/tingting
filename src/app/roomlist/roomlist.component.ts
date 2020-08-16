@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/database'; // If using Firebase database
 import { DatePipe } from '@angular/common';
 import { ResolutionService } from '../services/resolution.service';
 
@@ -50,7 +52,7 @@ export class RoomlistComponent implements OnInit {
       this.rooms = [];
       let ind = -1;
       resp.forEach(i => {
-        if (Object.keys(i.val().members).includes(this.nickname)) {
+        if (i.val().members &&Object.keys(i.val().members).includes(this.nickname)) {
           let arr: any;
           arr = i.val();
           arr.key = i.key;
