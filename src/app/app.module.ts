@@ -15,6 +15,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './services/auth.guard';
 import { AuthService } from './services/auth.service';
 import { ResolutionService } from './services/resolution.service';
+import { SignupComponent } from './signup/signup.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { ResolutionService } from './services/resolution.service';
     LoginComponent,
     RoomlistComponent,
     HeaderComponent,
-    HomeComponent
+    HomeComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,

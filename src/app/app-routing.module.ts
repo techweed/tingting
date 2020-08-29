@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
 // import { RoomlistComponent } from './roomlist/roomlist.component';
 // import { AddroomComponent } from './addroom/addroom.component';
 // import { ChatroomComponent } from './chatroom/chatroom.component';
@@ -10,6 +11,7 @@ import { AuthGuard } from './services/auth.guard';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
   // { path: 'roomlist', component: RoomlistComponent },
   // { path: 'addroom', component: AddroomComponent },
   // { path: 'chatroom/:roomname', component: ChatroomComponent },

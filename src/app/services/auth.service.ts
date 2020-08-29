@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import * as firebase from 'firebase/app';
+import 'firebase/auth'; // If using Firebase database
 
 @Injectable()
 export class AuthService {
@@ -11,10 +13,19 @@ export class AuthService {
     //    localStorage.setItem('access_token', "jwt_token");
     // }
 
+
+
     logout() {
         localStorage.removeItem('nickname');
+        var user = firebase.auth().currentUser;
+        if(user.isAnonymous){
+            user.delete().then(function() {
+              // User deleted. Redirect to login page...
+            }).catch(function(error) {
+              // An error happened.
+            });
         this.router.navigate(['/login']);
-
+        }
     }
 
     isAuthenticated() {

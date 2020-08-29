@@ -12,13 +12,21 @@
 
                 <small id="emailHelp" class="form-text text-muted"></small>
             </div>
-            <!-- <div class="form-group" style="padding-bottom: 60px;">
+
+
+            <div class="form-group">
                 <label for="">Password</label>
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password" ngModel
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password" formControlName="password"
                     required>
-            </div> -->
+                    <span *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">Please enter your password</span>
+            </div>
+
+
+
+
             <button type="submit" [disabled]="!loginForm.valid" class="btn btn-primary" style="float: right;">Login</button>
 
         </form>
     </div>
 </div>
+<div id="snackbar"> Login Failed!</div>

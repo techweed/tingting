@@ -196,6 +196,7 @@ export class RoomlistComponent implements OnInit {
       if (!snapshot.exists()) {
         var x = document.getElementById("snackbar");
         x.className = "show";
+        x.innerText = "User not found"
         setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
       } else {
         firebase.database().ref('rooms/').orderByChild('roomname').equalTo(roomname).once('value', (resp: any) => {
@@ -206,6 +207,7 @@ export class RoomlistComponent implements OnInit {
             if (snapshot.exists()) {
               var x = document.getElementById("snackbar");
               x.className = "show";
+              x.innerText = "Already a Member"
               setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
             } else {
               userRef.child(mem).set(0);
