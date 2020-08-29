@@ -12,7 +12,7 @@ import * as firebase from 'firebase/app';
 export class SignupComponent implements OnInit {
 
   signupForm: FormGroup;
-  ref = firebase.database().ref('users/');
+  ref = firebase.database().ref('clients');
 
   constructor(private router: Router, private formBuilder: FormBuilder) { }
 
@@ -32,13 +32,13 @@ export class SignupComponent implements OnInit {
       };
       signup.nickname = form.nickname.toLowerCase();
       signup.password = form.password;
-      this.ref.orderByChild('nickname').equalTo(signup.nickname).once('value', snapshot => {
+      this.ref.orderByChild('nickname').equalTo(signup.nickname).once('value', (snapshot: any) => {
         if (snapshot.exists()) {
           var x = document.getElementById("snackbar");
           x.className = "show";
           setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
         } else {
-          const newUser = firebase.database().ref('users/').push();
+          const newUser = firebase.database().ref('clients').push();
           newUser.set(signup);
           this.router.navigate(['/login']);
         }

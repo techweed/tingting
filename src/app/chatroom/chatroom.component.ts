@@ -2,9 +2,13 @@ import { Component, OnInit, ElementRef, ViewChild, Input, Output, EventEmitter }
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import * as firebase from 'firebase/app';
+
 import { DatePipe } from '@angular/common';
 import { ResolutionService } from '../services/resolution.service';
+
+import * as firebase from 'firebase/app';
+import 'firebase/database'; // If using Firebase database
+import 'firebase/auth'; // If using Firebase database
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {

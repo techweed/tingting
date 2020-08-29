@@ -192,13 +192,13 @@ export class RoomlistComponent implements OnInit {
   addMember(roomname: string, member: any) {
     event.stopPropagation();
     let mem = member.value.newMember.toLowerCase();
-    firebase.database().ref('users/').orderByChild('nickname').equalTo(mem).once('value', (snapshot: any) => {
-      if (!snapshot.exists()) {
-        var x = document.getElementById("snackbar");
-        x.className = "show";
-        x.innerText = "User not found"
-        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
-      } else {
+    // firebase.database().ref('users/').orderByChild('nickname').equalTo(mem).once('value', (snapshot: any) => {
+    //   if (!snapshot.exists()) {
+    //     var x = document.getElementById("snackbar");
+    //     x.className = "show";
+    //     x.innerText = "User not found"
+    //     setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    //   } else {
         firebase.database().ref('rooms/').orderByChild('roomname').equalTo(roomname).once('value', (resp: any) => {
           let roomuser = [];
           roomuser = snapshotToArray(resp);
@@ -214,8 +214,8 @@ export class RoomlistComponent implements OnInit {
             }
           })
         });
-      }
-    })
+      // }
+    // })
   }
 
   abc() { event.stopPropagation(); }

@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   nickname = '';
-  ref = firebase.database().ref('users/');
   matcher = new MyErrorStateMatcher();
 
   constructor(private router: Router, private formBuilder: FormBuilder) { }
@@ -48,7 +47,7 @@ export class LoginComponent implements OnInit {
     let user = [];
     const login = form;
     login.nickname = login.nickname.toLowerCase();
-    this.ref.orderByChild('nickname').equalTo(login.nickname).once('value', snapshot => {
+    firebase.database().ref('clients/').orderByChild('nickname').equalTo(login.nickname).once('value', snapshot => {
       if (snapshot.exists()) {
         user = snapshotToArray(snapshot);
         if (user[0].password == login.password) {
