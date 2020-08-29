@@ -55,7 +55,7 @@
     <tbody>
       <tr *ngFor="let x of rooms; index as i" (click)="enterChatRoom(x.roomname)">
         <th scope="row"></th>
-        <td style="display: flex;">{{x.roomname.length>20?x.roomname.substring(0, 20) + '...':x.roomname}}<div
+        <td style="display: flex;">{{x.roomname.length>20?x.roomname.substring(0, 20) + '...':x.roomname}}<div *ngIf="x.unread>0"
             style="margin-left:5px;border-radius: 10px;width:auto;min-width:20px;height:20px;background-color: orange;text-align: center;">
             &nbsp;{{x.unread}}&nbsp;</div>
         </td>
@@ -102,7 +102,7 @@
         <tr *ngFor="let x of rooms; index as i" (click)="enterChatRoom(x.roomname)">
           <th scope="row"></th>
           <td style="min-width: 60vw;display: flex;">
-            {{x.roomname.length>30?x.roomname.substring(0, 30) + '...':x.roomname}}<div
+            {{x.roomname.length>30?x.roomname.substring(0, 30) + '...':x.roomname}}<div *ngIf="x.unread>0"
               style="margin-left:5px;border-radius: 10px;width:auto;min-width:20px;height:20px;background-color: orange;text-align: center;">
               &nbsp;{{x.unread}}&nbsp;</div>
           </td>
