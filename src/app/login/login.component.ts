@@ -39,6 +39,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  signup() {
+    this.router.navigate(['/signup']);
+  }
+
   onFormSubmit(form: any) {
     let x = document.getElementById("snackbar");
     let user = [];
@@ -51,12 +55,12 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('nickname', login.nickname);
           this.router.navigate(['/home']);
           //firebase auth..
-            firebase.auth().signInAnonymously().catch(function (error) {
-              // Handle Errors here.
-              var errorCode = error.code;
-              var errorMessage = error.message;
-              // ...
-            });
+          firebase.auth().signInAnonymously().catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+          });
         } else {
           x.className = "show";
           x.innerText = "Incorrect Password"
